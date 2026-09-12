@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BISQ // KOINLY</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="brand">
+      <div class="logo" aria-label="Logo punk de Bisq"><span>B!</span></div>
+      <div><strong>BISQ // KOINLY</strong><small>Conversor fiscal local, sin servidor</small></div>
+    </header>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">PRIVATE BY DESIGN</p>
+        <h1>Tu historial.<br><em>Tu máquina.</em></h1>
+        <p class="lead">Concilia los trades de Bisq con los movimientos reales de Bitcoin. Tus archivos nunca salen del navegador.</p>
+      </div>
+      <aside class="manifesto">
+        <b>LOCAL ONLY</b>
+        <span>1 · transactions.csv = verdad on-chain</span>
+        <span>2 · tradeHistory.csv = contexto fiat</span>
+        <span>3 · TxHash conservado en cada movimiento</span>
+      </aside>
+    </section>
+    <section class="card">
+      <h2>Generar archivo Koinly</h2>
+      <p class="muted">Los CSV se procesan con JavaScript en este navegador.</p>
+      <form id="form">
+        <div class="grid">
+          <label>Historial de trades
+            <input id="trade" type="file" accept=".csv" required>
+            <small>tradeHistory.csv</small>
+          </label>
+          <label>Transacciones on-chain
+            <input id="transactions" type="file" accept=".csv" required>
+            <small>transactions.csv</small>
+          </label>
+          <label class="fiat">Moneda fiat
+            <input id="fiat" type="text" value="EUR" maxlength="8" required>
+          </label>
+        </div>
+        <button type="submit">GENERAR CSV <span>→</span></button>
+      </form>
+      <div id="message" class="message" hidden></div>
+    </section>
+    <footer>Sin subida · sin logs · sin almacenamiento · código abierto</footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
