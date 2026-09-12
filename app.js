@@ -31,7 +31,7 @@ function btcText(value) {
 function money(value) { return String(value || "").trim(); }
 function date(value) {
   const parsed = new Date(`${value.trim()} UTC`);
-  if (Number.isNaN(parsed.valueOf())) throw new Error(`Fecha no válida: ${value}`);
+  if (Number.isNaN(parsed.valueOf())) throw new Error(`Invalid date: ${value}`);
   return parsed.toISOString().replace(".000Z", "+00:00");
 }
 function row(values) { return Object.fromEntries(HEADERS.map((header, i) => [header, values[i] ?? ""])); }
@@ -74,8 +74,8 @@ document.querySelector("#form").addEventListener("submit", async event => {
   event.preventDefault(); const message = document.querySelector("#message");
   try {
     const trade = document.querySelector("#trade").files[0], transactions = document.querySelector("#transactions").files[0];
-    if (!trade || !transactions) throw new Error("Selecciona los dos archivos CSV.");
+    if (!trade || !transactions) throw new Error("Select both CSV files.");
     const rows = mapFiles(await trade.text(), await transactions.text(), document.querySelector("#fiat").value.trim().toUpperCase());
-    download(rows); message.hidden = false; message.textContent = `CSV generado: ${rows.length} filas. La descarga se ha creado en tu navegador.`;
-  } catch (error) { message.hidden = false; message.textContent = `No se pudo generar el archivo: ${error.message}`; }
+    download(rows); message.hidden = false; message.textContent = `CSV generated: ${rows.length} rows. The download was created in your browser.`;
+  } catch (error) { message.hidden = false; message.textContent = `Could not generate the file: ${error.message}`; }
 });

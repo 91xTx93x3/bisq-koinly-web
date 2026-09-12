@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,44 +9,44 @@
 <body>
   <main class="shell">
     <header class="brand">
-      <div class="logo" aria-label="Logo punk de Bisq"><span>B!</span></div>
-      <div><strong>BISQ // KOINLY</strong><small>Conversor fiscal local, sin servidor</small></div>
+      <div class="logo" aria-label="Punk Bisq logo"><span>B!</span></div>
+      <div><strong>BISQ // KOINLY</strong><small>Local tax converter, no server</small></div>
     </header>
     <section class="hero">
       <div>
         <p class="eyebrow">PRIVATE BY DESIGN</p>
-        <h1>Tu historial.<br><em>Tu máquina.</em></h1>
-        <p class="lead">Concilia los trades de Bisq con los movimientos reales de Bitcoin. Tus archivos nunca salen del navegador.</p>
+        <h1>Your history.<br><em>Your machine.</em></h1>
+        <p class="lead">Reconcile your Bisq trades with real Bitcoin movements. Your files never leave the browser.</p>
       </div>
       <aside class="manifesto">
         <b>LOCAL ONLY</b>
-        <span>1 · transactions.csv = verdad on-chain</span>
-        <span>2 · tradeHistory.csv = contexto fiat</span>
-        <span>3 · TxHash conservado en cada movimiento</span>
+        <span>1 · transactions.csv = on-chain truth</span>
+        <span>2 · tradeHistory.csv = fiat context</span>
+        <span>3 · TxHash preserved on every movement</span>
       </aside>
     </section>
     <section class="card">
-      <h2>Generar archivo Koinly</h2>
-      <p class="muted">Los CSV se procesan con JavaScript en este navegador.</p>
+      <h2>Generate Koinly file</h2>
+      <p class="muted">CSV files are processed with JavaScript in this browser.</p>
       <form id="form">
         <div class="grid">
-          <label>Historial de trades
+          <label>Trade history
             <input id="trade" type="file" accept=".csv" required>
             <small>tradeHistory.csv</small>
           </label>
-          <label>Transacciones on-chain
+          <label>On-chain transactions
             <input id="transactions" type="file" accept=".csv" required>
             <small>transactions.csv</small>
           </label>
-          <label class="fiat">Moneda fiat
+          <label class="fiat">Fiat currency
             <input id="fiat" type="text" value="EUR" maxlength="8" required>
           </label>
         </div>
-        <button type="submit">GENERAR CSV <span>→</span></button>
+        <button type="submit">GENERATE CSV <span>→</span></button>
       </form>
       <div id="message" class="message" hidden></div>
     </section>
-    <footer>Sin subida · sin logs · sin almacenamiento · código abierto</footer>
+    <footer>No uploads · no logs · no storage · open source</footer>
   </main>
   <script src="app.js"></script>
 </body>
