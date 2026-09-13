@@ -1,53 +1,61 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none';">
   <title>BISQ // KOINLY</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="shell">
     <header class="brand">
-      <div class="logo" aria-label="Punk Bisq logo"><span>B!</span></div>
-      <div><strong>BISQ // KOINLY</strong><small>Local tax converter, no server</small></div>
+      <div class="logo" aria-label="Logo de Bisq"><span>B!</span></div>
+      <div><strong>BISQ // KOINLY</strong><small>Conversor fiscal local</small></div>
     </header>
     <section class="hero">
       <div>
-        <p class="eyebrow">PRIVATE BY DESIGN</p>
-        <h1>Bisq to Koinly.<br><em>Done right.</em></h1>
-        <p class="lead">Import your Bisq trades and transactions into a Koinly-ready CSV. Your files never leave the browser.</p>
+        <p class="eyebrow">PRIVACIDAD POR DISEÑO</p>
+        <h1>Bisq a Koinly.<br><em>Sin subir tus datos.</em></h1>
+        <p class="lead">Concilia tus trades de Bisq con los movimientos reales de Bitcoin y genera un CSV listo para importar. Todo se procesa en este navegador.</p>
       </div>
       <aside class="manifesto">
-        <b>LOCAL ONLY</b>
-        <span>1 · Read Bisq transaction exports</span>
-        <span>2 · Add trade prices and fiat amounts</span>
-        <span>3 · Export a Koinly-ready CSV</span>
+        <b>SOLO LOCAL</b>
+        <span>1 · Lee tus exportaciones de Bisq</span>
+        <span>2 · Concilia precios, comisiones y escrow</span>
+        <span>3 · Revisa y descarga el CSV</span>
       </aside>
     </section>
     <section class="card">
-      <h2>Generate Koinly import</h2>
-      <p class="muted">Convert Bisq exports into a Koinly Universal CSV in your browser.</p>
+      <h2>Generar importación para Koinly</h2>
+      <p class="muted">La moneda fiat se detecta desde <code>tradeHistory.csv</code>.</p>
       <form id="form">
         <div class="grid">
-          <label>Trade history
-            <input id="trade" type="file" accept=".csv" required>
+          <label for="trade">Historial de trades
+            <input id="trade" type="file" accept=".csv,text/csv" required>
             <small>tradeHistory.csv</small>
           </label>
-          <label>On-chain transactions
-            <input id="transactions" type="file" accept=".csv" required>
+          <label for="transactions">Transacciones on-chain
+            <input id="transactions" type="file" accept=".csv,text/csv" required>
             <small>transactions.csv</small>
           </label>
-          <label class="fiat">Fiat currency
-            <input id="fiat" type="text" value="EUR" maxlength="8" required>
-          </label>
         </div>
-        <button type="submit">GENERATE CSV <span>→</span></button>
+        <button id="convert" type="submit">REVISAR CSV <span>→</span></button>
       </form>
-      <div id="message" class="message" hidden></div>
+      <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+      <section id="preview" class="preview" hidden aria-labelledby="preview-title">
+        <h3 id="preview-title">Resumen de la conversión</h3>
+        <dl id="preview-body" class="summary-grid"></dl>
+        <div id="warnings"></div>
+        <div class="actions">
+          <button id="download" type="button" disabled>DESCARGAR CSV</button>
+          <button id="reset" class="secondary" type="button">EMPEZAR DE NUEVO</button>
+        </div>
+      </section>
     </section>
-    <footer>No uploads · no logs · no storage · open source</footer>
+    <footer>Sin subidas · sin logs · sin almacenamiento · código abierto</footer>
   </main>
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
