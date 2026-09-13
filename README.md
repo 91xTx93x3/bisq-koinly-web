@@ -1,26 +1,24 @@
 # Bisq to Koinly
 
-Aplicación web estática para convertir exportaciones de Bisq en un CSV
-Universal compatible con Koinly.
+Static web application for converting Bisq exports into a Koinly Universal
+CSV.
 
-## Uso
+## Usage
 
-Abre la aplicación en GitHub Pages, selecciona `tradeHistory.csv` y
-`transactions.csv`, y pulsa **REVISAR CSV**. Todo el procesamiento se ejecuta
-localmente en JavaScript: los archivos no se suben ni se guardan en ningún
-servidor.
+Open the application on GitHub Pages, select `tradeHistory.csv` and
+`transactions.csv`, then click **REVIEW CSV**. All processing runs locally in
+JavaScript: files are never uploaded or stored on a server.
 
-También puedes servir estos archivos localmente con cualquier servidor
-estático, por ejemplo:
+You can also serve the files locally with any static server:
 
 ```bash
 npx serve .
 ```
 
-La columna `TxHash` conserva el `Transaction ID` de `transactions.csv`.
-Los depósitos fiat sintéticos no tienen hash on-chain y dejan esa columna
-vacía. La aplicación incluye compras, comisiones, depósitos multisig,
-collateral, retiros, fondos recibidos y refunds.
+The `TxHash` column preserves the `Transaction ID` from `transactions.csv`.
+Synthetic fiat deposits have no on-chain hash and leave that column empty. The
+application handles purchases, fees, multisig deposits, collateral, wallet
+withdrawals, received funds, and refunds.
 
-No requiere backend, dependencias, instalación ni conexión a Internet durante
-la conversión.
+No backend, dependencies, installation, or internet connection is required
+during conversion.

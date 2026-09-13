@@ -1,5 +1,5 @@
 export function parseCsv(text, name = "CSV") {
-  if (!text.trim()) throw new Error(`${name}: el archivo está vacío.`);
+  if (!text.trim()) throw new Error(`${name}: the file is empty.`);
   const rows = [];
   let row = [], cell = "", quoted = false;
   for (let index = 0; index < text.length; index += 1) {
@@ -23,25 +23,25 @@ export function parseCsv(text, name = "CSV") {
       cell += character;
     }
   }
-  if (quoted) throw new Error(`${name}: hay comillas sin cerrar.`);
+  if (quoted) throw new Error(`${name}: unterminated quoted field.`);
   if (cell || row.length) {
     row.push(cell);
     if (row.some(value => value.trim() !== "")) rows.push(row);
   }
-  if (!rows.length) throw new Error(`${name}: no contiene filas.`);
+  if (!rows.length) throw new Error(`${name}: contains no rows.`);
   const headers = rows.shift().map(value => value.trim());
-  if (headers.some(header => !header)) throw new Error(`${name}: contiene una columna sin nombre.`);
-  if (new Set(headers).size !== headers.length) throw new Error(`${name}: contiene columnas duplicadas.`);
+  if (headers.some(header => !header)) throw new Error(`${name}: contains an unnamed column.`);
+  if (new Set(headers).size !== headers.length) throw new Error(`${name}: contains duplicate columns.`);
   return rows.map((values, index) => {
     if (values.length !== headers.length) {
-      throw new Error(`${name}, fila ${index + 2}: se esperaban ${headers.length} columnas y hay ${values.length}.`);
+      throw new Error(`${name}, row ${index + 2}: expected ${headers.length} columns but found ${values.length}.`);
     }
     return Object.fromEntries(headers.map((header, column) => [header, values[column].trim()]));
   });
 }
 
 export function validateColumns(rows, required, name) {
-  if (!rows.length) throw new Error(`${name}: no contiene datos.`);
+  if (!rows.length) throw new Error(`${name}: contains no data.`);
   const missing = required.filter(column => !(column in rows[0]));
-  if (missing.length) throw new Error(`${name}: faltan columnas: ${missing.join(", ")}.`);
+  if (missing.length) throw new Error(`${name}: missing columns: ${missing.join(", ")}.`);
 }

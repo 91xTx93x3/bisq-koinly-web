@@ -18,11 +18,11 @@ function normalized(value) {
 
 export function parseBtc(value, field = "BTC") {
   const raw = String(value ?? "").trim();
-  if (!raw || !/^[+-]?\d+(\.\d+)?$/.test(raw)) throw new Error(`${field}: importe BTC inválido (${value}).`);
+  if (!raw || !/^[+-]?\d+(\.\d+)?$/.test(raw)) throw new Error(`${field}: invalid BTC amount (${value}).`);
   const negative = raw.startsWith("-");
   const unsigned = raw.replace(/^[+-]/, "");
   const [whole, fraction = ""] = unsigned.split(".");
-  if (fraction.length > 8) throw new Error(`${field}: admite como máximo 8 decimales.`);
+  if (fraction.length > 8) throw new Error(`${field}: supports at most 8 decimal places.`);
   const result = BigInt(whole) * BTC_SCALE
     + BigInt((fraction + "00000000").slice(0, 8));
   return negative ? -result : result;
@@ -38,13 +38,13 @@ export function btcText(value) {
 
 function date(value, field = "Date/Time") {
   const parsed = new Date(`${String(value).trim()} UTC`);
-  if (Number.isNaN(parsed.valueOf())) throw new Error(`${field}: fecha inválida (${value}).`);
+  if (Number.isNaN(parsed.valueOf())) throw new Error(`${field}: invalid date (${value}).`);
   return parsed.toISOString().replace(".000Z", "+00:00");
 }
 
 function fiatAmount(value, field) {
   const raw = String(value ?? "").trim();
-  if (!raw || !/^[+]?\d+(\.\d+)?$/.test(raw)) throw new Error(`${field}: importe fiat inválido (${value}).`);
+  if (!raw || !/^[+]?\d+(\.\d+)?$/.test(raw)) throw new Error(`${field}: invalid fiat amount (${value}).`);
   return raw.replace(/^\+/, "");
 }
 
@@ -68,17 +68,17 @@ export function convertFiles(tradeText, transactionText) {
   let duplicates = 0;
   for (const [index, trade] of trades.entries()) {
     const id = trade["Trade ID"];
-    if (!id) throw new Error(`tradeHistory.csv, fila ${index + 2}: Trade ID vacío.`);
+    if (!id) throw new Error(`tradeHistory.csv, row ${index + 2}: empty Trade ID.`);
     if (seenTrades.has(id)) {
       duplicates += 1;
-      warnings.push(`${id}: trade duplicado omitido.`);
+      warnings.push(`${id}: duplicate trade skipped.`);
       continue;
     }
     seenTrades.add(id);
     if (normalized(trade.Status) !== "completed") continue;
     fiatAmount(trade.Amount, `Trade ${id}`);
     parseBtc(trade["Amount in BTC"], `Trade ${id}`);
-    if (!trade.Currency) throw new Error(`Trade ${id}: moneda fiat vacía.`);
+    if (!trade.Currency) throw new Error(`Trade ${id}: empty fiat currency.`);
     date(trade["Date/Time"], `Trade ${id}`);
     uniqueTrades.push(trade);
   }
@@ -87,15 +87,15 @@ export function convertFiles(tradeText, transactionText) {
   const uniqueTransactions = [];
   for (const [index, transaction] of transactions.entries()) {
     const txid = transaction["Transaction ID"];
-    if (!txid) throw new Error(`transactions.csv, fila ${index + 2}: Transaction ID vacío.`);
+    if (!txid) throw new Error(`transactions.csv, row ${index + 2}: empty Transaction ID.`);
     if (seenTransactions.has(txid)) {
       duplicates += 1;
-      warnings.push(`${txid}: transacción duplicada omitida.`);
+      warnings.push(`${txid}: duplicate transaction skipped.`);
       continue;
     }
     seenTransactions.add(txid);
-    parseBtc(transaction["Amount in BTC"], `Transacción ${txid}`);
-    date(transaction["Date/Time"], `Transacción ${txid}`);
+    parseBtc(transaction["Amount in BTC"], `Transaction ${txid}`);
+    date(transaction["Date/Time"], `Transaction ${txid}`);
     uniqueTransactions.push(transaction);
   }
 
@@ -136,7 +136,7 @@ export function convertFiles(tradeText, transactionText) {
     const when = date(transaction["Date/Time"]);
     if (!KNOWN_DETAILS.has(details)) {
       unknownTransactions += 1;
-      warnings.push(`${hash}: detalle no reconocido "${transaction.Details}", omitido.`);
+      warnings.push(`${hash}: unknown detail "${transaction.Details}", skipped.`);
       continue;
     }
     if (details === "maker and tx fee" || details === "taker and tx fee") rows.push(row([
@@ -144,7 +144,7 @@ export function convertFiles(tradeText, transactionText) {
     ]));
     else if (details === "multisig deposit") {
       if (!trade) {
-        warnings.push(`${hash}: multisig deposit sin trade asociado, omitido.`);
+        warnings.push(`${hash}: multisig deposit has no associated trade, skipped.`);
         continue;
       }
       rows.push(row([
@@ -153,12 +153,12 @@ export function convertFiles(tradeText, transactionText) {
       ]));
     } else if (details === "multisig payout") {
       if (!trade) {
-        warnings.push(`${hash}: multisig payout sin trade asociado, omitido.`);
+        warnings.push(`${hash}: multisig payout has no associated trade, skipped.`);
         continue;
       }
       const bought = parseBtc(trade["Amount in BTC"]);
       const collateral = amount - bought;
-      if (collateral < 0n) warnings.push(`${hash}: payout menor que el BTC comprado para ${prefix}.`);
+      if (collateral < 0n) warnings.push(`${hash}: payout is lower than the purchased BTC for ${prefix}.`);
       rows.push(row([
         when, fiatAmount(trade.Amount, `Trade ${prefix}`), trade.Currency.toUpperCase(),
         trade["Amount in BTC"], "BTC", "", "", "buy",

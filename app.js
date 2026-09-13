@@ -18,19 +18,19 @@ function showMessage(text, type = "error") {
 function renderPreview(result) {
   const { report } = result;
   const values = [
-    ["Trades completados", report.tradesProcessed],
-    ["Transacciones leídas", report.transactionsProcessed],
-    ["Filas generadas", report.rows.length],
-    ["Duplicados omitidos", report.duplicates],
-    ["Transacciones desconocidas", report.unknownTransactions],
-    ["Advertencias", report.warnings.length],
+    ["Completed trades", report.tradesProcessed],
+    ["Transactions read", report.transactionsProcessed],
+    ["Rows generated", report.rows.length],
+    ["Duplicates skipped", report.duplicates],
+    ["Unknown transactions", report.unknownTransactions],
+    ["Warnings", report.warnings.length],
   ];
   previewBody.innerHTML = values.map(([label, value]) =>
     `<div><dt>${label}</dt><dd>${value}</dd></div>`
   ).join("");
   const warnings = report.warnings.length
     ? `<ul class="warnings">${report.warnings.map(warning => `<li>${escapeHtml(warning)}</li>`).join("")}</ul>`
-    : "<p class=\"success-text\">No se han detectado advertencias.</p>";
+    : "<p class=\"success-text\">No warnings detected.</p>";
   document.querySelector("#warnings").innerHTML = warnings;
   preview.hidden = false;
 }
@@ -49,7 +49,7 @@ form.addEventListener("submit", async event => {
   try {
     const tradeFile = document.querySelector("#trade").files[0];
     const transactionFile = document.querySelector("#transactions").files[0];
-    if (!tradeFile || !transactionFile) throw new Error("Selecciona los dos archivos CSV.");
+    if (!tradeFile || !transactionFile) throw new Error("Select both CSV files.");
     const [tradeText, transactionText] = await Promise.all([
       tradeFile.text(), transactionFile.text(),
     ]);
@@ -57,16 +57,16 @@ form.addEventListener("submit", async event => {
     pendingResult = result;
     renderPreview(result);
     downloadButton.disabled = false;
-    showMessage("Revisión completada. Comprueba las advertencias antes de descargar.", "success");
+    showMessage("Review complete. Check the warnings before downloading.", "success");
   } catch (error) {
-    showMessage(error instanceof Error ? error.message : "No se pudo procesar la conversión.");
+    showMessage(error instanceof Error ? error.message : "The conversion could not be processed.");
   }
 });
 
 downloadButton.addEventListener("click", () => {
   if (!pendingResult) return;
   downloadCsv(pendingResult.rows);
-  showMessage(`CSV generado correctamente: ${pendingResult.rows.length} filas.`, "success");
+  showMessage(`CSV generated successfully: ${pendingResult.rows.length} rows.`, "success");
 });
 
 resetButton.addEventListener("click", () => {
